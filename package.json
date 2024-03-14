@@ -1,0 +1,10 @@
+{
+  "name": "gemini-nodejs",
+  "type": "module",
+  "dependencies": {
+    "@google/generative-ai": "^0.2.1",
+    "dotenv": "^16.4.5",
+    "fs": "^0.0.1-security",
+    "node-fetch": "^3.3.2"
+  }
+}
