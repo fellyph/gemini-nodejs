@@ -10,7 +10,10 @@
         "demo2": "ts-node demo-2.ts",
         "image": "ts-node app-image.ts",
         "pdf": "ts-node app-pdf.ts",
-        "board": "ts-node app-image-board.ts"
+        "board": "ts-node app-image-board.ts",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+        "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+        "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
     },
     "dependencies": {
         "@google/generative-ai": "^0.2.1",
@@ -21,7 +24,10 @@
     },
     "devDependencies": {
         "@types/express": "^4.17.21",
+        "@types/jest": "^29.5.12",
         "@types/node": "^20.11.24",
+        "jest": "^29.7.0",
+        "ts-jest": "^29.1.2",
         "ts-node": "^10.9.2",
         "typescript": "^5.3.3"
     }

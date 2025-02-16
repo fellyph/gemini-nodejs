@@ -38,6 +38,11 @@ The following npm scripts are available:
 - `npm run pdf` - Run app-pdf.ts (Extracts skills from a PDF curriculum)
 - `npm run board` - Run app-image-board.ts (Parses text from a board image)
 
+### Testing
+- `npm test` - Run all tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage report
+
 ## Project Structure
 
 - `app.ts` - Main Express server application
@@ -45,6 +50,10 @@ The following npm scripts are available:
 - `app-image.ts` - Image analysis example
 - `app-pdf.ts` - PDF analysis example
 - `app-image-board.ts` - Image text extraction example
+- `__tests__/` - Test files for the application
+  - `demo-1.test.ts` - Tests for demo-1
+  - `demo-2.test.ts` - Tests for demo-2
+  - `utils/test-utils.ts` - Test utilities and mocks
 
 ## TypeScript Configuration
 
@@ -54,6 +63,26 @@ The project uses TypeScript with the following configuration:
 - Strict mode enabled
 - Source maps enabled
 - Output directory: ./dist
+
+## Testing
+
+The project uses Jest for testing with the following features:
+- TypeScript support via ts-jest
+- Mocked Gemini AI responses
+- Error handling tests
+- Coverage reporting
+
+To run the tests:
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage report
+npm run test:coverage
+```
 
 ```bash
 node app-image.js
