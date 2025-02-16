@@ -1,3 +1,4 @@
+// PROMP CONFIGURATION
 import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
@@ -15,7 +16,7 @@ async function generateText(): Promise<void> {
             model: "gemini-2.0-flash-001",
         });
 
-        const prompt: string = `Say hello to the Workshop's audience`;
+        const prompt: string = `List 5 main river in Portugal in JSON code`;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;

@@ -24,19 +24,31 @@ GOOGLE_API_KEY=your_api_key_here
 
 The following npm scripts are available:
 
+### Main Application
 - `npm run build` - Compile TypeScript to JavaScript
 - `npm run start` - Run the compiled app (Express server)
 - `npm run dev` - Run the app directly with ts-node (development mode)
 - `npm run watch` - Watch for changes and recompile TypeScript
 
-### Demo Scripts
-- `npm run demo1` - Run demo-1.ts (Generates JSON list of Brazilian rivers)
-- `npm run demo2` - Run demo-2.ts (Generates a story about a shaman)
+### Basic Demos
+- `npm run demo0` - Basic example of Gemini text generation
+- `npm run demo1` - Generate a list of Brazilian rivers in JSON format
+- `npm run demo2` - Generate a story about a shaman with translations
 
-### Image and Document Analysis
-- `npm run image` - Run app-image.ts (Analyzes an image and provides description)
-- `npm run pdf` - Run app-pdf.ts (Extracts skills from a PDF curriculum)
-- `npm run board` - Run app-image-board.ts (Parses text from a board image)
+### Feature-Specific Demos
+- `npm run demo:city` - City-related text generation example
+- `npm run demo:prompt` - Demonstrates prompt configuration and customization
+- `npm run demo:structured` - Shows structured output generation
+
+### Final Demo Versions
+- `npm run final:demo0` - Final version of the basic text generation
+- `npm run final:demo1` - Final version of the Brazilian rivers demo
+- `npm run final:demo2` - Final version with structured output
+
+### Media Analysis Examples
+- `npm run image` - Analyzes an image and provides description
+- `npm run pdf` - Extracts skills from a PDF curriculum
+- `npm run board` - Parses text from a board image
 
 ### Testing
 - `npm test` - Run all tests
@@ -46,7 +58,8 @@ The following npm scripts are available:
 ## Project Structure
 
 - `app.ts` - Main Express server application
-- `demo-1.ts` & `demo-2.ts` - Example scripts demonstrating Gemini Pro usage
+- `demo-*.ts` - Various demo scripts showing different Gemini AI features
+- `final-demo-*.ts` - Final versions of the demo scripts
 - `app-image.ts` - Image analysis example
 - `app-pdf.ts` - PDF analysis example
 - `app-image-board.ts` - Image text extraction example
@@ -83,6 +96,23 @@ npm run test:watch
 # Run tests with coverage report
 npm run test:coverage
 ```
+
+## Demo Descriptions
+
+### Basic Demos
+- **demo0**: Introduction to Gemini AI text generation
+- **demo1**: Demonstrates JSON output with Brazilian rivers list
+- **demo2**: Shows creative text generation with translation
+
+### Feature-Specific Demos
+- **demo:city**: Example of location-based text generation
+- **demo:prompt**: Shows how to configure and customize prompts
+- **demo:structured**: Demonstrates generating structured data outputs
+
+### Final Versions
+- **final:demo0**: Enhanced version of the basic text generation
+- **final:demo1**: Improved version of the Brazilian rivers demo
+- **final:demo2**: Advanced structured output with error handling
 
 ```bash
 node app-image.js

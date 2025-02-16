@@ -1,3 +1,4 @@
+// DEMO 0 - Hello World
 import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
