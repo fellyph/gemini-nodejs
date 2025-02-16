@@ -8,8 +8,6 @@ dotenv.config();
 // 1. configure the API key
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
 
-const country: string = "Brazil";
-
 // 2. Generate text
 async function generateText(): Promise<void> {
     try {
@@ -17,7 +15,7 @@ async function generateText(): Promise<void> {
             model: "gemini-2.0-flash-001",
         });
 
-        const prompt: string = `List 5 main river in ${country} in JSON code`;
+        const prompt: string = `Say hello to the Workshop's audience`;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -29,9 +27,3 @@ async function generateText(): Promise<void> {
 }
 
 generateText();
-
-/*
-Note: For detailed information about the available models, including their capabilities and rate limits, 
-see Gemini models. The rate limit for Gemini Pro models is 60 requests per minute (RPM), 
-and we offer options for requesting rate limit increases.
-*/

@@ -25,7 +25,7 @@ interface Part {
 async function generateText(): Promise<void> {
     try {
         const model: GenerativeModel = genAI.getGenerativeModel({
-            model: "gemini-pro",
+            model: "gemini-2.0-flash-001",
         });
 
         const parts: Part[] = [

@@ -17,12 +17,12 @@ describe("demo-2", () => {
 
         // Verify that the model was called with correct parameters
         expect(mockGenerativeAI.getGenerativeModel).toHaveBeenCalledWith({
-            model: "gemini-pro",
+            model: "gemini-2.0-flash-001",
         });
 
         // Get the mock function with proper typing
         const generateContent = mockGenerativeAI.getGenerativeModel({
-            model: "gemini-pro",
+            model: "gemini-2.0-flash-001",
         }).generateContent;
 
         // Verify that generateContent was called with the correct parameters
@@ -53,7 +53,7 @@ describe("demo-2", () => {
     it("should handle errors gracefully", async () => {
         // Mock an error scenario with proper typing
         const errorMock = mockGenerativeAI.getGenerativeModel({
-            model: "gemini-pro",
+            model: "gemini-2.0-flash-001",
         });
 
         // Override the implementation for this test

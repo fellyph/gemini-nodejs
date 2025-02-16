@@ -26,7 +26,7 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
 async function generateText(): Promise<void> {
     try {
         const model: GenerativeModel = genAI.getGenerativeModel({
-            model: "gemini-pro-vision",
+            model: "gemini-2.0-flash-001-vision",
         });
 
         const docPath: string = "docs/fellyph-cv-2022.pdf";
