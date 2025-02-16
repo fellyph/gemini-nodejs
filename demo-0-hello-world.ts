@@ -1,3 +1,4 @@
+// DEMO 0 - Hello World
 import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
@@ -11,16 +12,7 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
 // 2. Generate text
 async function generateText(): Promise<void> {
     try {
-        const model: GenerativeModel = genAI.getGenerativeModel({
-            model: "gemini-2.0-flash-001",
-        });
-
-        const prompt: string = `Say hello to the Workshop's audience`;
-
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text: string = response.text();
-        console.log(text);
+        console.log("Hello, world!");
     } catch (error) {
         console.error("Error:", error);
     }
