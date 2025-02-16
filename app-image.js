@@ -21,7 +21,7 @@ async function generateText() {
 
         const parts = [
             {
-                text: "Describe the image below in a few sentences and could you guess where this image was taken?",
+                text: "Describe the image below in a few sentences and could you guess where this image was taken? and translate it to portuguese.",
             },
             {
                 inlineData: {
