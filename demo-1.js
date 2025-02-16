@@ -8,14 +8,14 @@ global.fetch = fetch;
 // 1. configure the API key
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
+const country = "Brazil";
 
 // 2. Generate text
 async function generateText() {
     try {
         const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
-        const prompt = `Create a story about a man that follow his dreams 
-        and become a successful shaman in amazon forest.`;
+        const prompt = `List 5 main river in ${country} in JSON code`;
         
         const result = await model.generateContent(prompt);
         const response = await result.response;
