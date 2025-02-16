@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PDF Upload</title>
+        <link
+            href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+            rel="stylesheet"
+        />
+    </head>
+    <body class="flex flex-col min-h-screen">
+        <header class="bg-blue-500 text-white p-4 sticky top-0 z-10">
+            <h1 class="text-center text-xl font-bold">PDF Uploader</h1>
+        </header>
+
+        <main class="container mx-auto pt-8 pb-20">
+            <div class="bg-white border rounded-lg shadow-md p-6 w-64 mx-auto max-w-full">
+                <h1>Send your CV</h1>
+                <form
+                    action="/upload"
+                    method="post"
+                    enctype="multipart/form-data"
+                >
+                    <input
+                        type="file"
+                        name="pdfFile"
+                        accept=".pdf"
+                        required
+                        class="block w-full p-2"
+                    />
+                    <button
+                        type="submit"
+                        class="bg-blue-500 text-white px-4 py-2 mt-2 rounded"
+                    >
+                        Upload
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <footer class="bg-gray-200 p-4 mt-8 text-center">
+            <a
+                href="https://github.com/your-repo"
+                class="text-blue-600 hover:underline"
+                >View on GitHub</a
+            >
+        </footer>
+    </body>
+</html>
