@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Smart TI Search - Gemini AI Exercises</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/css/styles.css" />
+    </head>
+    <body>
+        <div class="container">
+            <a href="/" class="back-button">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                </svg>
+                Back to Exercises
+            </a>
+
+            <h1>Smart TI Search</h1>
+            <p class="description">
+                Ask questions about the TI and get the most relevant answers
+                using Gemini AI.
+            </p>
+
+            <div class="form-group">
+                <label for="question">Question:</label>
+                <input
+                    type="text"
+                    id="question"
+                    placeholder="what is the latest Next.js version?"
+                />
+                <button onclick="ask()">Ask</button>
+            </div>
+
+            <div id="result"></div>
+        </div>
+
+        <script>
+            function formatNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+
+            function displayData(data) {
+                const rivers = data;
+                console.log(rivers);
+                return `<div>${rivers}</div>`;
+            }
+
+            async function ask() {
+                const question = document.getElementById("question").value;
+                const resultDiv = document.getElementById("result");
+
+                if (!question) {
+                    resultDiv.innerHTML =
+                        '<div class="error">Please ask a question</div>';
+                    return;
+                }
+
+                resultDiv.innerHTML =
+                    '<div class="loading">Generating answer...</div>';
+
+                try {
+                    const response = await fetch("/api/ask-search", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ question }),
+                    });
+
+                    const data = await response.json();
+                    resultDiv.innerHTML = displayData(data);
+                } catch (error) {
+                    resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                }
+            }
+
+            // Add keyboard support
+            document
+                .getElementById("question")
+                .addEventListener("keypress", function (event) {
+                    if (event.key === "Enter") {
+                        getRivers();
+                    }
+                });
+        </script>
+    </body>
+</html>

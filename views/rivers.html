@@ -3,75 +3,46 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Rivers API Demo</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 20px;
-            }
-            .form-group {
-                margin-bottom: 15px;
-            }
-            input[type="text"] {
-                padding: 8px;
-                width: 200px;
-            }
-            button {
-                padding: 8px 15px;
-                background-color: #007bff;
-                color: white;
-                border: none;
-                cursor: pointer;
-            }
-            button:hover {
-                background-color: #0056b3;
-            }
-            #result {
-                margin-top: 20px;
-                padding: 15px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 10px;
-            }
-            th,
-            td {
-                padding: 12px;
-                text-align: left;
-                border-bottom: 1px solid #ddd;
-            }
-            th {
-                background-color: #f8f9fa;
-                font-weight: bold;
-            }
-            tr:hover {
-                background-color: #f5f5f5;
-            }
-            .error {
-                color: #dc3545;
-                padding: 10px;
-                border-radius: 4px;
-                background-color: #f8d7da;
-            }
-            .loading {
-                color: #0056b3;
-                font-style: italic;
-            }
-        </style>
+        <title>River Analysis - Gemini AI Exercises</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/css/styles.css" />
     </head>
     <body>
-        <h1>Rivers API Demo</h1>
-        <div class="form-group">
-            <label for="country">Enter Country:</label>
-            <input type="text" id="country" placeholder="e.g., Brazil" />
-            <button onclick="getRivers()">Get Rivers</button>
+        <div class="container">
+            <a href="/" class="back-button">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                </svg>
+                Back to Exercises
+            </a>
+
+            <h1>River Analysis</h1>
+            <p class="description">
+                Discover major rivers around the world with their lengths and
+                characteristics using Gemini AI.
+            </p>
+
+            <div class="form-group">
+                <label for="country">Enter Country:</label>
+                <input type="text" id="country" placeholder="e.g., Brazil" />
+                <button onclick="getRivers()">Analyze Rivers</button>
+            </div>
+
+            <div id="result"></div>
         </div>
-        <div id="result"></div>
 
         <script>
             function formatNumber(num) {
@@ -119,7 +90,7 @@
                 }
 
                 resultDiv.innerHTML =
-                    '<div class="loading">Loading rivers data...</div>';
+                    '<div class="loading">Analyzing rivers...</div>';
 
                 try {
                     const response = await fetch("/api/rivers", {
@@ -136,6 +107,15 @@
                     resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
                 }
             }
+
+            // Add keyboard support
+            document
+                .getElementById("country")
+                .addEventListener("keypress", function (event) {
+                    if (event.key === "Enter") {
+                        getRivers();
+                    }
+                });
         </script>
     </body>
 </html>
