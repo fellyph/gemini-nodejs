@@ -5,24 +5,12 @@ import {
     SchemaType,
 } from "@google/generative-ai";
 import dotenv from "dotenv";
+import { RiverResponse } from "../types/River";
 
 dotenv.config();
 
 const router = Router();
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
-
-interface River {
-    riverName: string;
-    riverLength: number;
-}
-
-interface RiverResponse {
-    success: boolean;
-    data?: {
-        rivers: River[];
-    };
-    error?: string;
-}
 
 router.post("/rivers", async (req: Request, res: Response) => {
     try {

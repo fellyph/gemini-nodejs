@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import riversRouter from "./routes/rivers";
+import groundingRouter from "./routes/ask-search";
 
 const app = express();
 const port: number = 3000;
@@ -21,10 +22,16 @@ app.get("/", (req: Request, res: Response): void => {
 
 // Exercise routes
 app.use("/api", riversRouter);
+app.use("/api", groundingRouter);
 
 // Rivers exercise page
 app.get("/rivers", (req: Request, res: Response): void => {
     res.sendFile(path.join(rootDir, "views/rivers.html"));
+});
+
+// Rivers exercise page
+app.get("/grounding-search", (req: Request, res: Response): void => {
+    res.sendFile(path.join(rootDir, "views/grounding-search.html"));
 });
 
 // Image analysis exercise page
