@@ -13,7 +13,7 @@ describe("demo-2", () => {
 
     it("should generate a story about a shaman", async () => {
         // Import the module after setting up mocks
-        await import("../demo-1");
+        await import("../demo-1-prompt-configuration");
 
         // Verify that the model was called with correct parameters
         expect(mockGenerativeAI.getGenerativeModel).toHaveBeenCalledWith({
@@ -62,7 +62,7 @@ describe("demo-2", () => {
         );
 
         // Import the module after setting up mocks
-        await import("../demo-1");
+        await import("../demo-1-prompt-configuration");
 
         // Verify that the error was logged
         expect(mockConsole.error).toHaveBeenCalledWith(

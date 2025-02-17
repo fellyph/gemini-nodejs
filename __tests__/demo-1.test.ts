@@ -13,7 +13,7 @@ describe("demo-1", () => {
 
     it("should generate text about Brazilian rivers", async () => {
         // Import the module after setting up mocks
-        await import("../demo-2");
+        await import("../demo-3-route");
 
         // Verify that the model was called with correct parameters
         expect(mockGenerativeAI.getGenerativeModel).toHaveBeenCalledWith({
@@ -46,7 +46,7 @@ describe("demo-1", () => {
         );
 
         // Import the module after setting up mocks
-        await import("../demo-2");
+        await import("../demo-3-route");
 
         // Verify that the error was logged
         expect(mockConsole.error).toHaveBeenCalledWith(
