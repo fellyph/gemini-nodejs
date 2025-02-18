@@ -1,24 +1,20 @@
-import { Router, Request, Response } from "express";
-import {
-    GoogleGenerativeAI,
-    GenerativeModel,
-    SchemaType,
-} from "@google/generative-ai";
-import dotenv from "dotenv";
+import { Router, Request, Response } from 'express';
+import { GoogleGenerativeAI, GenerativeModel, SchemaType } from '@google/generative-ai';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const router = Router();
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
-router.post("/analyze-book", async (req: Request, res: Response) => {
+router.post('/analyze-book', async (req: Request, res: Response) => {
     try {
         const { imageData, mimeType } = req.body;
 
         if (!imageData || !mimeType) {
             return res.status(400).json({
                 success: false,
-                error: "Image data and MIME type are required in the request body",
+                error: 'Image data and MIME type are required in the request body',
             });
         }
 
@@ -28,22 +24,22 @@ router.post("/analyze-book", async (req: Request, res: Response) => {
             properties: {
                 bookTitle: {
                     type: SchemaType.STRING,
-                    description: "Title of the book",
+                    description: 'Title of the book',
                     nullable: false,
                 },
                 bookAuthor: {
                     type: SchemaType.STRING,
-                    description: "Author of the book",
+                    description: 'Author of the book',
                     nullable: false,
                 },
             },
-            required: ["bookTitle", "bookAuthor"],
+            required: ['bookTitle', 'bookAuthor'],
         };
 
         const model: GenerativeModel = genAI.getGenerativeModel({
-            model: "gemini-2.0-flash-001",
+            model: 'gemini-2.0-flash-001',
             generationConfig: {
-                responseMimeType: "application/json",
+                responseMimeType: 'application/json',
                 responseSchema: bookSchema,
             },
         });
@@ -55,7 +51,7 @@ router.post("/analyze-book", async (req: Request, res: Response) => {
                     data: imageData,
                 },
             },
-            { text: "Could you extract the name of the book and author" },
+            { text: 'Could you extract the name of the book and author' },
         ]);
 
         const response = await result.response;
@@ -67,10 +63,10 @@ router.post("/analyze-book", async (req: Request, res: Response) => {
             data: bookData,
         });
     } catch (error) {
-        console.error("Error:", error);
+        console.error('Error:', error);
         res.status(500).json({
             success: false,
-            error: "Failed to analyze book image",
+            error: 'Failed to analyze book image',
         });
     }
 });

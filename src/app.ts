@@ -1,64 +1,93 @@
-import express, { Request, Response } from "express";
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
-import riversRouter from "./routes/rivers";
-import groundingRouter from "./routes/ask-search";
-import imageAnalysisRouter from "./routes/analyze-book";
+import express, { Request, Response, NextFunction } from 'express';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import expressLayouts from 'express-ejs-layouts';
 
+// Route imports
+import pageRoutes from './routes/pages';
+import riversRouter from './routes/rivers';
+import groundingRouter from './routes/ask-search';
+import imageAnalysisRouter from './routes/analyze-book';
+
+// Configuration
 const app = express();
-const port: number = 3000;
-
+const port: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const __filename: string = fileURLToPath(import.meta.url);
 const __dirname: string = dirname(__filename);
-const rootDir: string = path.join(__dirname, "..");
+const rootDir: string = path.join(__dirname, '..');
 
-// Middleware
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
-app.use(express.static(path.join(rootDir, "public")));
+// View engine setup
+const configureViewEngine = (): void => {
+    app.set('view engine', 'ejs');
+    app.set('views', path.join(__dirname, 'views'));
+    app.use(expressLayouts);
+    app.set('layout', 'layouts/main');
+};
 
-// Main landing page
-app.get("/", (req: Request, res: Response): void => {
-    res.sendFile(path.join(rootDir, "views/index.html"));
-});
+// Middleware setup
+const configureMiddleware = (): void => {
+    app.use(express.json({ limit: '50mb' }));
+    app.use(express.urlencoded({ limit: '50mb', extended: true }));
+    app.use(express.static(path.join(rootDir, 'public')));
+};
 
-// Exercise routes
-app.use("/api", riversRouter);
-app.use("/api", groundingRouter);
-app.use("/api", imageAnalysisRouter);
+// Route setup
+const configureRoutes = (): void => {
+    // Page routes
+    app.use('/', pageRoutes);
 
-// Rivers exercise page
-app.get("/rivers", (req: Request, res: Response): void => {
-    res.sendFile(path.join(rootDir, "views/rivers.html"));
-});
+    // API routes
+    app.use('/api', riversRouter);
+    app.use('/api', groundingRouter);
+    app.use('/api', imageAnalysisRouter);
+};
 
-// Rivers exercise page
-app.get("/grounding-search", (req: Request, res: Response): void => {
-    res.sendFile(path.join(rootDir, "views/grounding-search.html"));
-});
+// Error handling
+const configureErrorHandling = (): void => {
+    // 404 handler
+    app.use((req: Request, res: Response): void => {
+        const error = new Error('Page Not Found') as any;
+        error.status = 404;
+        res.status(404).render('error', {
+            title: '404 - Page Not Found',
+            message: "The page you're looking for doesn't exist.",
+            error: error,
+            stack: error.stack,
+        });
+    });
 
-// Image analysis exercise page
-app.get("/image-analysis", (req: Request, res: Response): void => {
-    res.sendFile(path.join(rootDir, "views/image-analysis.html"));
-});
+    // Global error handler
+    app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
+        console.error(err.stack);
 
-// Document analysis exercise page
-app.get("/document-analysis", (req: Request, res: Response): void => {
-    res.sendFile(path.join(rootDir, "views/document-analysis.html"));
-});
+        // Set default status code if not set
+        const statusCode = err.status || 500;
+        const errorMessage =
+            statusCode === 500
+                ? 'Something went wrong on our end.'
+                : err.message || 'An error occurred.';
 
-// Smart search exercise page
-app.get("/smart-search", (req: Request, res: Response): void => {
-    res.sendFile(path.join(rootDir, "views/smart-search.html"));
-});
+        res.status(statusCode).render('error', {
+            title: `${statusCode} - ${statusCode === 500 ? 'Server Error' : 'Error'}`,
+            message: errorMessage,
+            error: process.env.NODE_ENV !== 'production' ? err : null,
+            stack: process.env.NODE_ENV !== 'production' ? err.stack : null,
+        });
+    });
+};
 
-// Chat demo exercise page
-app.get("/chat", (req: Request, res: Response): void => {
-    res.sendFile(path.join(rootDir, "views/chat.html"));
-});
+// Initialize application
+const initializeApp = (): void => {
+    configureViewEngine();
+    configureMiddleware();
+    configureRoutes();
+    configureErrorHandling();
 
-// Start server
-app.listen(port, (): void => {
-    console.log(`Server listening on port ${port}`);
-    console.log(`Open http://localhost:${port} to view the application`);
-});
+    app.listen(port, (): void => {
+        console.log(`Server listening on port ${port}`);
+        console.log(`Open http://localhost:${port} to view the application`);
+    });
+};
+
+// Start the application
+initializeApp();
