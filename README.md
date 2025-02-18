@@ -2,6 +2,22 @@
 
 This project demonstrates the usage of Google's Gemini AI API with Node.js and TypeScript. It includes various examples of text generation and image/document analysis using the Gemini Pro and Gemini Pro Vision models.
 
+This Workshop will start with a few demos executed on the terminal, to demostrate the usage of the Gemini API. The second part of the workshop will be focused on building a complete application using the Gemini API. Using express js to build a web application to demostrate the usage of the Gemini API.
+
+## Demos
+
+- [Hello World](./src/demos/demo-0-hello-world.ts) this is the first demo that will call the Gemini API to generate a text response.
+- [Prompt Configuration](./src/demos/demo-1-prompt-configuration.ts) this demo will show how to configure the prompt for the Gemini API.
+- [Streaming](./src/demos/demo-2-streaming.ts) this demo will show how to use the streaming feature of the Gemini API.
+- [Chat](./src/demos/demo-3-chat.ts) this demo will show how to use the chat feature of the Gemini API.
+- [Structured Output](./src/demos/demo-4-structured-output.ts) this demo will show how to use the structured output feature of the Gemini API.
+
+## Web Application
+
+- [Rivers](./src/views/rivers.ejs) this view will show how to use the structured output feature of the Gemini API to generate a list of rivers.
+- [Image Analysis](./src/views/image-analysis.ejs) this view will show how to use the image analysis feature of the Gemini API to analyze an image.
+- [Chat](./src/views/chat.ejs) this view will show how to use the chat feature of the Gemini API to build a chat application.
+- [PDF Analysis](./src/views/pdf-analysis.ejs) this view will show how to use the PDF analysis feature of the Gemini API to analyze a PDF file.
 ## Prerequisites
 
 - Node.js (Latest LTS version recommended)
