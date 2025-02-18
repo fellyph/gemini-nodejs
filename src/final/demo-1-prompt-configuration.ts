@@ -19,6 +19,8 @@ async function generateText(): Promise<void> {
     try {
         const model: GenerativeModel = genAI.getGenerativeModel({
             model: 'gemini-2.0-flash-001',
+            systemInstruction:
+                'You are a helpful coding tutor that can answer questions and help with tasks.',
         });
 
         const result = await model.generateContent({
@@ -27,7 +29,7 @@ async function generateText(): Promise<void> {
                     role: 'user',
                     parts: [
                         {
-                            text: 'Create a story about a man that follow his dreams and become a successful shaman in amazon forest and translate it to portuguese.',
+                            text: 'Talk about the main programing languages and their features.',
                         },
                     ],
                 },

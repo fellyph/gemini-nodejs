@@ -13,22 +13,20 @@ const rl = readline.createInterface({
 async function run() {
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-001' });
 
-    const chat = model.startChat({
-        history: [], // Start with an empty history
-        generationConfig: {
-            maxOutputTokens: 500,
-        },
-    });
+    /*
+     * COMPLETE: Start the chat
+     */
 
     async function askAndRespond() {
         rl.question('You: ', async (msg) => {
             if (msg.toLowerCase() === 'exit') {
                 rl.close();
             } else {
-                const result = await chat.sendMessage(msg);
-                const response = await result.response;
-                const text = await response.text();
-                console.log('AI: ', text);
+                /*
+                 * COMPLETE: Submit the message to the model
+                 */
+
+                console.log('AI: ', 'RESPONSE HERE');
                 askAndRespond();
             }
         });

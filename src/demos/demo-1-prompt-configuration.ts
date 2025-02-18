@@ -12,6 +12,9 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 // 2. Generate text
 async function generateText(): Promise<void> {
     try {
+        /*
+         * COMPLETE: Configure the model
+         */
         const model: GenerativeModel = genAI.getGenerativeModel({
             model: 'gemini-2.0-flash-001',
         });

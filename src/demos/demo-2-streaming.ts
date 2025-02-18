@@ -15,12 +15,9 @@ let isAwaitingResponse = false; // Flag to indicate if we're waiting for a respo
 async function run() {
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-001' });
 
-    const chat = model.startChat({
-        history: [], // Start with an empty history
-        generationConfig: {
-            maxOutputTokens: 500,
-        },
-    });
+    /*
+     *  COMPLETE: Start the chat
+     */
 
     // Function to get user input and send it to the model using streaming
     function askAndRespond() {
@@ -32,13 +29,13 @@ async function run() {
                 } else {
                     isAwaitingResponse = true; // Set flag to true as we start receiving the stream
                     try {
-                        const result = await chat.sendMessageStream(msg);
+                        /*
+                         *  COMPLETE: Submit messages to the model
+                         */
                         let text = '';
-                        for await (const chunk of result.stream) {
-                            const chunkText = await chunk.text(); // Assuming chunk.text() returns a Promise
-                            console.log('AI: ', chunkText);
-                            text += chunkText;
-                        }
+                        /*
+                         *  COMPLETE: Process the stream
+                         */
                         isAwaitingResponse = false; // Reset flag after stream is complete
                         askAndRespond(); // Ready for the next input
                     } catch (error) {
