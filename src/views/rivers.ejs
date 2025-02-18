@@ -1,0 +1,85 @@
+<%- include('./partials/back-button') %>
+
+<%- include('./partials/page-header', { 
+                title: 'River Analysis',
+                subtitle: `Discover major rivers around the world with their lengths
+                and characteristics using Gemini AI.` 
+            }) %>
+
+<div class="form-group">
+    <label for="question">Country:</label>
+    <input type="text" id="country" placeholder="Brazil" required />
+    <button onclick="getRivers()">Research</button>
+</div>
+<div id="result"></div>
+
+<%- contentFor('scripts') %>
+<script>
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function displayRivers(data) {
+        if (!data.success) {
+            return `<div class="error">${data.error}</div>`;
+        }
+
+        const rivers = data.data.rivers;
+        return `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>River Name</th>
+                                <th>Length (km)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rivers
+                                .map(
+                                    (river) => `
+                                <tr>
+                                    <td>${river.riverName}</td>
+                                    <td>${formatNumber(river.riverLength)}</td>
+                                </tr>
+                            `
+                                )
+                                .join('')}
+                        </tbody>
+                    </table>
+                `;
+    }
+
+    async function getRivers() {
+        const country = document.getElementById('country').value;
+        const resultDiv = document.getElementById('result');
+
+        if (!country) {
+            resultDiv.innerHTML = `<div class="error">Please enter a country name</div>`;
+            return;
+        }
+
+        resultDiv.innerHTML = `<div class="loading">Analyzing rivers...</div>`;
+
+        try {
+            const response = await fetch('/api/rivers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ country }),
+            });
+
+            const data = await response.json();
+            resultDiv.innerHTML = displayRivers(data);
+        } catch (error) {
+            resultDiv.innerHTML = `<div class="error">An error occurred while processing your request.</div>`;
+        }
+    }
+
+    // Add keyboard support
+    document.getElementById('country').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            getRivers();
+        }
+    });
+</script>
