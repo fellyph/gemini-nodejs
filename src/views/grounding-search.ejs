@@ -1,0 +1,62 @@
+<%- include('./partials/back-button') %>
+<%-
+    include('./partials/page-header', { 
+        title: 'Smart TI Search',
+        subtitle: `Ask questions about the TI and get the most relevant answers using Gemini AI.` 
+        }) %>
+
+<div class="form-group">
+    <label for="question">Question:</label>
+    <input type="text" id="question" placeholder="what is the latest Next.js version?" required />
+    <button onclick="ask()">Ask</button>
+</div>
+
+<div id="result"></div>
+
+<%- contentFor('scripts') %>
+
+<script>
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function displayData(data) {
+        const rivers = data;
+        console.log(rivers);
+        return `<div>${rivers}</div>`;
+    }
+
+    async function ask() {
+        const question = document.getElementById('question').value;
+        const resultDiv = document.getElementById('result');
+
+        if (!question) {
+            resultDiv.innerHTML = `<div class="error">Please enter a search query</div>`;
+            return;
+        }
+
+        resultDiv.innerHTML = `<div class="loading">Searching...</div>`;
+
+        try {
+            const response = await fetch('/api/ask-search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question }),
+            });
+
+            const data = await response.json();
+            resultDiv.innerHTML = displayData(data);
+        } catch (error) {
+            resultDiv.innerHTML = `<div class="error">An error occurred while processing your request.</div>`;
+        }
+    }
+
+    // Add keyboard support
+    document.getElementById('question').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            ask();
+        }
+    });
+</script>

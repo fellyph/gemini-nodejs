@@ -1,20 +1,20 @@
-import { Router, Request, Response } from "express";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import dotenv from "dotenv";
+import { Router, Request, Response } from 'express';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const router = Router();
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
 interface GeminiSearchResponse {
     response: {
         candidates: Array<{
             content: {
                 parts: Array<unknown>; // Pode ser mais específico se souber a estrutura do Object
-                role: "model";
+                role: 'model';
             };
-            finishReason: "STOP";
+            finishReason: 'STOP';
             groundingMetadata: {
                 searchEntryPoint: {
                     renderedContent: string;
@@ -39,26 +39,26 @@ interface GeminiSearchResponse {
     };
 }
 
-router.post("/ask-search", async (req: Request, res: Response) => {
+router.post('/ask-search', async (req: Request, res: Response) => {
     const { question } = req.body;
 
     if (!question) {
         return res.status(400).json({
             success: false,
-            error: "Question is required in the request body",
+            error: 'Question is required in the request body',
         });
     }
 
     const model = genAI.getGenerativeModel(
         {
-            model: "models/gemini-2.0-flash",
+            model: 'models/gemini-2.0-flash',
             tools: [
                 {
                     googleSearch: {},
                 },
             ],
         },
-        { apiVersion: "v1beta" }
+        { apiVersion: 'v1beta' }
     );
 
     const result = await model.generateContent(question);
@@ -68,7 +68,7 @@ router.post("/ask-search", async (req: Request, res: Response) => {
     if (!response) {
         return res.status(500).json({
             success: false,
-            error: "No response generated",
+            error: 'No response generated',
         });
     }
 

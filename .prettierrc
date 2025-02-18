@@ -1,0 +1,30 @@
+{
+    "plugins": ["prettier-plugin-ejs"],
+    "parser": "ejs",
+    "semi": true,
+    "tabWidth": 4,
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "endOfLine": "lf",
+    "htmlWhitespaceSensitivity": "css",
+    "ejsForceIndentedSyntax": false,
+    "ejsBracketSpacing": true,
+    "ejsQuotes": "single",
+    "overrides": [
+        {
+            "files": ["*.ejs"],
+            "options": {
+                "parser": "html",
+                "htmlWhitespaceSensitivity": "ignore"
+            }
+        },
+        {
+            "files": ["*.ts"],
+            "options": {
+                "parser": "typescript"
+            }
+        }
+    ]
+}

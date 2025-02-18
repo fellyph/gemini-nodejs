@@ -1,0 +1,33 @@
+<%- include('./partials/page-header', { title: title, subtitle: message }) %>
+
+<div class="error-container">
+    <div class="error-content">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            class="error-icon"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+        </svg>
+        <h1><%= title %></h1>
+        <p class="error-message"><%= message %></p>
+        <% if (process.env.NODE_ENV !== 'production' && error) { %>
+        <div class="error-details">
+            <h2>Error Details</h2>
+            <div class="error-stack">
+                <p class="error-name"><%= error.name %></p>
+                <p class="error-text"><%= error.message %></p>
+                <pre><code><%= error.stack %></code></pre>
+            </div>
+        </div>
+        <% } %>
+        <a href="/" class="button">Return to Home</a>
+    </div>
+</div>
