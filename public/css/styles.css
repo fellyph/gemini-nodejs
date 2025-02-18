@@ -7,6 +7,7 @@
     --text-primary: #111827;
     --text-secondary: #6b7280;
     --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --border-radius: 8px;
 }
 
 /* Base Styles */
@@ -189,7 +190,7 @@ button:hover {
 #result {
     margin-top: 2rem;
     background: var(--card-bg);
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     box-shadow: var(--shadow);
 }
 
@@ -243,4 +244,28 @@ tr:hover {
     .card {
         padding: 1.25rem;
     }
+}
+
+.image-preview-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+#image-preview {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#image-result {
+    margin-top: 2rem;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+}
+
+.hidden {
+    display: none !important;
 }

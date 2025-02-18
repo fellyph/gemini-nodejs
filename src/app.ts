@@ -3,6 +3,7 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import riversRouter from "./routes/rivers";
 import groundingRouter from "./routes/ask-search";
+import imageAnalysisRouter from "./routes/analyze-book";
 
 const app = express();
 const port: number = 3000;
@@ -12,7 +13,8 @@ const __dirname: string = dirname(__filename);
 const rootDir: string = path.join(__dirname, "..");
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.static(path.join(rootDir, "public")));
 
 // Main landing page
@@ -23,6 +25,7 @@ app.get("/", (req: Request, res: Response): void => {
 // Exercise routes
 app.use("/api", riversRouter);
 app.use("/api", groundingRouter);
+app.use("/api", imageAnalysisRouter);
 
 // Rivers exercise page
 app.get("/rivers", (req: Request, res: Response): void => {
