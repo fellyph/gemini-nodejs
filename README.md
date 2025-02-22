@@ -11,6 +11,7 @@ This Workshop will start with a few demos executed on the terminal, to demostrat
 - [Streaming](./src/demos/demo-2-streaming.ts) this demo will show how to use the streaming feature of the Gemini API.
 - [Chat](./src/demos/demo-3-chat.ts) this demo will show how to use the chat feature of the Gemini API.
 - [Structured Output](./src/demos/demo-4-structured-output.ts) this demo will show how to use the structured output feature of the Gemini API.
+- [Function Calling](./src/demos/demo-5-function-calling.ts) this demo will show how to use the function calling feature of the Gemini API.
 
 ## Web Application
 
