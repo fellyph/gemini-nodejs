@@ -12,6 +12,7 @@
         "demo:chat": "node --import ./register.js src/demos/demo-3-chat.ts",
         "demo:structured": "node --import ./register.js src/demos/demo-4-structured-output.ts",
         "demo:function": "node --import ./register.js src/demos/demo-5-function-calling.ts",
+        "demo:cache": "node --import ./register.js src/demos/demo-6-context-caching.ts",
         "final:demo0": "node --import ./register.js src/final/demo-0-hello-world.ts",
         "final:demo1": "node --import ./register.js src/final/demo-1-prompt-configuration.ts",
         "final:demo2": "node --import ./register.js src/final/demo-2-streaming.ts",
