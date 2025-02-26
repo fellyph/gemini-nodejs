@@ -13,6 +13,10 @@
         "demo:structured": "node --import ./register.js src/demos/demo-4-structured-output.ts",
         "demo:function": "node --import ./register.js src/demos/demo-5-function-calling.ts",
         "demo:cache": "node --import ./register.js src/demos/demo-6-context-caching.ts",
+        "genkit:hello": "node --import ./register.js src/demos/genkit/demo-0-hello-world.ts",
+        "genkit:stream": "node --import ./register.js src/demos/genkit/demo-1-stream-response.ts",
+        "genkit:structured": "node --import ./register.js src/demos/genkit/demo-2-structured-outputs.ts",
+        "genkit:image-structured": "node --import ./register.js src/demos/genkit/demo-4-image-structured-outputs.ts",
         "final:demo0": "node --import ./register.js src/final/demo-0-hello-world.ts",
         "final:demo1": "node --import ./register.js src/final/demo-1-prompt-configuration.ts",
         "final:demo2": "node --import ./register.js src/final/demo-2-streaming.ts",
@@ -30,12 +34,14 @@
         "format:check": "prettier --check \"src/**/*.{ts,ejs}\""
     },
     "dependencies": {
+        "@genkit-ai/googleai": "^1.0.5",
         "@google/generative-ai": "^0.22.0",
         "dotenv": "^16.4.5",
         "ejs": "^3.1.10",
         "express": "^4.18.3",
         "express-ejs-layouts": "^2.5.1",
         "fs": "^0.0.1-security",
+        "genkit": "^1.0.5",
         "node-fetch": "^3.3.2"
     },
     "devDependencies": {
