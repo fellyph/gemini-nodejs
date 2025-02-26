@@ -1,58 +1,96 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { FileState, GoogleAICacheManager, GoogleAIFileManager } from '@google/generative-ai/server';
 import dotenv from 'dotenv';
-import fs from 'fs';
 import path from 'path';
 
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+// A helper function to upload the PDF file to be cached
+async function uploadPdfFile(filePath: string, displayName: string) {
+    const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEY || '');
+    const fileResult = await fileManager.uploadFile(filePath, {
+        displayName,
+        mimeType: 'application/pdf',
+    });
 
-async function loadPdfAsBase64(filePath: string): Promise<string> {
-    const pdfBuffer = await fs.promises.readFile(filePath);
-    return pdfBuffer.toString('base64');
+    const { name, uri } = fileResult.file;
+
+    // Poll getFile() to check file state
+    let file = await fileManager.getFile(name);
+    while (file.state === FileState.PROCESSING) {
+        console.log('Waiting for PDF to be processed.');
+        // Sleep for 2 seconds
+        await new Promise((resolve) => setTimeout(resolve, 2_000));
+        file = await fileManager.getFile(name);
+    }
+
+    console.log(`PDF processing complete: ${uri}`);
+
+    return fileResult;
 }
 
 async function run() {
     try {
-        // Load the PDF file
-        const pdfPath = path.join(process.cwd(), 'gemini-prompt-101.pdf');
-        const pdfBase64 = await loadPdfAsBase64(pdfPath);
+        // Path to the PDF file
+        const pdfPath = path.join(process.cwd(), '/public/files/gemini-prompt-101.pdf');
 
-        // Initialize the model with the PDF content
-        const model = genAI.getGenerativeModel({
-            model: 'gemini-pro-vision',
-            generationConfig: {
-                temperature: 0.4,
-                topK: 32,
-                topP: 1,
-                maxOutputTokens: 4096,
-            },
-        });
+        // Upload the PDF file
+        const fileResult = await uploadPdfFile(pdfPath, 'Gemini Prompt Engineering PDF');
 
-        // Create chat session with the PDF context
-        const chat = model.startChat({
-            history: [],
-            context: `I have loaded a PDF document about Gemini Prompt Engineering. Please help me understand its contents.`,
-        });
+        // Construct a GoogleAICacheManager
+        const cacheManager = new GoogleAICacheManager(process.env.GOOGLE_API_KEY || '');
 
-        // Send initial message with the PDF content
-        const result = await chat.sendMessage({
+        // Create a cache with a 5 minute TTL
+        const displayName = 'gemini-prompt-guide';
+        const model = 'models/gemini-1.5-flash-001';
+        const systemInstruction =
+            'You are an expert document analyzer. Your job is to answer ' +
+            "the user's query based on the PDF document you have access to about Gemini Prompt Engineering.";
+        const ttlSeconds = 2000;
+
+        const cache = await cacheManager.create({
+            model,
+            displayName,
+            systemInstruction,
             contents: [
                 {
+                    role: 'user',
+                    parts: [
+                        {
+                            fileData: {
+                                mimeType: fileResult.file.mimeType,
+                                fileUri: fileResult.file.uri,
+                            },
+                        },
+                    ],
+                },
+            ],
+            ttlSeconds,
+        });
+
+        // Initialize the Generative AI with the API key
+        const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+
+        // Construct a GenerativeModel which uses the cache object
+        const genModel = genAI.getGenerativeModelFromCachedContent(cache);
+
+        // Ask initial question
+        console.log('Asking: What are the main topics covered in this PDF?');
+        const result = await genModel.generateContent({
+            contents: [
+                {
+                    role: 'user',
                     parts: [
                         {
                             text: 'What are the main topics covered in this PDF?',
-                            inlineData: {
-                                mimeType: 'application/pdf',
-                                data: pdfBase64,
-                            },
                         },
                     ],
                 },
             ],
         });
 
-        console.log('Initial Response:', await result.response.text());
+        console.log('Initial Response:', result.response.text());
+        console.log('Usage Metadata:', result.response.usageMetadata);
 
         // Ask follow-up questions using the cached context
         const followUpQuestions = [
@@ -61,9 +99,22 @@ async function run() {
         ];
 
         for (const question of followUpQuestions) {
-            const followUp = await chat.sendMessage(question);
-            console.log(`\nQuestion: ${question}`);
-            console.log('Response:', await followUp.response.text());
+            console.log(`\nAsking: ${question}`);
+            const followUp = await genModel.generateContent({
+                contents: [
+                    {
+                        role: 'user',
+                        parts: [
+                            {
+                                text: question,
+                            },
+                        ],
+                    },
+                ],
+            });
+
+            console.log('Response:', followUp.response.text());
+            console.log('Usage Metadata:', followUp.response.usageMetadata);
         }
     } catch (error) {
         console.error('Error:', error);
