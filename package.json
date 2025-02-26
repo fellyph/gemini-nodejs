@@ -19,6 +19,7 @@
         "final:demo3": "node --import ./register.js src/final/demo-3-chat.ts",
         "final:demo4": "node --import ./register.js src/final/demo-4-structured-output.ts",
         "final:demo5": "node --import ./register.js src/final/demo-5-function-calling.ts",
+        "final:demo6": "node --import ./register.js src/final/demo-6-context-caching.ts",
         "image": "node --import ./register.js src/app-image.ts",
         "pdf": "node --import ./register.js src/app-pdf.ts",
         "board": "node --import ./register.js src/app-image-board.ts",
@@ -29,7 +30,7 @@
         "format:check": "prettier --check \"src/**/*.{ts,ejs}\""
     },
     "dependencies": {
-        "@google/generative-ai": "^0.21.0",
+        "@google/generative-ai": "^0.22.0",
         "dotenv": "^16.4.5",
         "ejs": "^3.1.10",
         "express": "^4.18.3",
