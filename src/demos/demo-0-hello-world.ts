@@ -12,6 +12,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 async function generateText(): Promise<void> {
     try {
         console.log('Hello, world!');
+        //add a prompt using the api
     } catch (error) {
         console.error('Error:', error);
     }

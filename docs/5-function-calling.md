@@ -37,18 +37,65 @@ Let's consider a simple example of a weather application using function calling:
 3.  **Function Determination:** The LLM recognizes that it needs to call a weather API to get this information.
 4.  **Function Call Generation:** The LLM generates a function call request, specifying something like:
     ```json
-    {
-      "function_name": "get_weather",
-      "parameters": {
-        "location": "Lagos, Portugal"
-      }
-    }
+        { 
+            name: 'getWeather', 
+            args: { 
+                country: 'PT', 
+                city: 'Lagos' 
+                } 
+        } 
     ```
-5.  **Function Execution (by application):** An application receives this request and executes the `get_weather` function, using a weather API with the location "Lagos, Portugal". The API returns weather data (e.g., temperature, conditions, humidity).
+5.  **Function Execution (by application):** An application receives this request and executes the `getWeather` function, using a weather API with the location "Lagos, Portugal". The API returns weather data (e.g., temperature, conditions, humidity).
 6.  **Process Results:** The application feeds the weather data back to the LLM.
 7.  **Response Generation:** The LLM uses the weather data to generate a user-friendly response, such as: *"The weather in Lagos, Portugal is currently sunny with a temperature of 18 degrees Celsius."*
 
 **In this example, the LLM didn't "know" the weather itself. Instead, it intelligently used function calling to leverage an external tool (the weather API) to get the information and provide a helpful answer.**
+
+
+### How to use Function Calling with the GENAI JS SDK
+
+To define the function calling the the Gemini SDK we need to define what is expected to the LLM know what it should call and when, for that we need to come with a function declaration:
+
+```typescript
+ const weatherFunctionDeclaration: FunctionDeclaration = {
+        name: 'getWeather',
+        description: 'Gets the current weather for a requested city',
+        parameters: {
+            type: Type.OBJECT,
+            properties: {
+                city: {
+                    type: Type.STRING,
+                    description: 'The city to get the weather information for',
+                },
+                country: {
+                    type: Type.STRING,
+                    description: 'The country of the city in country code',
+                },
+            },
+            required: ['city', 'country'],
+        },
+    };
+```
+
+After define the function and the parameters the next step will be define the configuration of our chat or model:
+
+```typescript
+    const chat = await genAI.chats.create({
+        model: 'gemini-2.0-flash',
+        history: [],
+        config: {
+            tools: [{ functionDeclarations: [weatherFunctionDeclaration] }],
+            toolConfig: {
+                functionCallingConfig: {
+                    mode: FunctionCallingConfigMode.ANY,
+                    allowedFunctionNames: ['getWeather'],
+                },
+            },
+        },
+    });
+```
+
+Now anytime the model is asked about the weather it will know that has a possibility to call a function to request the realtime data.
 
 ### Use Cases for Function Calling
 
@@ -68,9 +115,3 @@ It's important to distinguish function calling from other techniques used to enh
 
 *   **Retrieval-Augmented Generation (RAG):** RAG focuses on augmenting the LLM's *knowledge* by retrieving information from external documents. Function calling focuses on enabling the LLM to *perform actions* and interact with external systems. While RAG enhances knowledge, function calling enhances *actionability*.
 *   **Prompt Engineering:** Prompt engineering is about crafting effective prompts to guide the LLM's text generation. Function calling is a more fundamental capability that allows LLMs to go beyond text generation and interact with the real world.
-
-### Conclusion
-
-Function calling is a game-changing advancement in the field of Large Language Models. By enabling LLMs to interact with external functions and APIs, it transforms them from purely text-based models into powerful tools for real-world applications. As function calling technology matures, we can expect to see even more innovative and impactful uses emerge, further blurring the lines between AI and everyday tasks.
-
-This markdown file provides a basic introduction to function calling. For deeper understanding, further exploration of specific LLM platforms and function calling implementations is recommended.
