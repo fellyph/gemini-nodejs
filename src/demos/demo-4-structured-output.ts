@@ -1,27 +1,37 @@
 // PROMP CONFIGURATION
-import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
-import fetch from 'node-fetch';
+import { GoogleGenAI, Type, Schema } from '@google/genai';
 import dotenv from 'dotenv';
 
 dotenv.config();
-(global as any).fetch = fetch;
 
 // 1. configure the API key
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+const genAI = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || '' });
 
 // 2. Generate text
 async function generateText(): Promise<void> {
     try {
-        const model: GenerativeModel = genAI.getGenerativeModel({
+        // Define the schema for the structured output
+        // COMPLETE: Define the schema for the structured output
+
+        // Generate content with structured output
+        const response = await genAI.models.generateContent({
             model: 'gemini-2.0-flash-001',
+            contents: [
+                {
+                    role: 'user',
+                    parts: [{ text: 'List 6 main river in Portugal' }],
+                },
+            ],
+            // COMPLETE: define configuration
         });
 
-        const prompt: string = `List 5 main river in Portugal in JSON code`;
+        /* 
+        format simplyfied using JSON schema instructions on the prompt:
+        const prompt = `List 5 main river in Portugal in JSON code using this JSON schema:
+                            River = {'riverName': string, 'riverLength': number}
+                            Return: Array<River>`; */
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text: string = response.text();
-        console.log(text);
+        console.log(response.text);
     } catch (error) {
         console.error('Error:', error);
     }

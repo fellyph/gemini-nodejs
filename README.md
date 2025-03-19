@@ -1,4 +1,4 @@
-# Gemini Node.js TypeScript Project
+# Gemini Node.js TypeScript Course
 
 This project demonstrates the usage of Google's Gemini AI API with Node.js and TypeScript. It includes various examples of text generation and image/document analysis using the Gemini Pro and Gemini Pro Vision models.
 

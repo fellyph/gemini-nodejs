@@ -1,58 +1,28 @@
+import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
-dotenv.config();
-import readline from 'readline'; // Import readline for reading terminal input
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+dotenv.config(); // Import readline for reading terminal input
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
+// 1. configure the API key
+const genAI = new GoogleGenAI({
+    apiKey: process.env.GOOGLE_API_KEY || '',
 });
 
-let isAwaitingResponse = false; // Flag to indicate if we're waiting for a response
-
+//2. Generate text with streaming
 async function run() {
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-001' });
-
-    const chat = model.startChat({
-        history: [], // Start with an empty history
-        generationConfig: {
-            maxOutputTokens: 500,
-        },
+    const stream = await genAI.models.generateContentStream({
+        model: 'gemini-2.0-flash-001',
+        contents: [
+            {
+                role: 'user',
+                parts: [{ text: 'Write a poem about a Javascript Developer that is scared of AI' }],
+            },
+        ],
     });
 
-    // Function to get user input and send it to the model using streaming
-    function askAndRespond() {
-        if (!isAwaitingResponse) {
-            // Check if not currently awaiting a response
-            rl.question('You: ', async (msg) => {
-                if (msg.toLowerCase() === 'exit') {
-                    rl.close();
-                } else {
-                    isAwaitingResponse = true; // Set flag to true as we start receiving the stream
-                    try {
-                        const result = await chat.sendMessageStream(msg);
-                        let text = '';
-                        for await (const chunk of result.stream) {
-                            const chunkText = await chunk.text(); // Assuming chunk.text() returns a Promise
-                            console.log('AI: ', chunkText);
-                            text += chunkText;
-                        }
-                        isAwaitingResponse = false; // Reset flag after stream is complete
-                        askAndRespond(); // Ready for the next input
-                    } catch (error) {
-                        console.error('Error:', error);
-                        isAwaitingResponse = false; // Ensure flag is reset on error too
-                    }
-                }
-            });
-        } else {
-            console.log('Please wait for the current response to complete.');
-        }
+    for await (const chunk of stream) {
+        console.log(chunk.text);
     }
-
-    askAndRespond(); // Start the conversation loop
 }
 
 run();
