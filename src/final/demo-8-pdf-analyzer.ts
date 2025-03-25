@@ -1,10 +1,8 @@
-import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
-import fetch from 'node-fetch';
+import { ContentListUnion, createPartFromUri, GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 import { promises as fs } from 'fs';
 
 dotenv.config();
-(global as any).fetch = fetch;
 
 interface DocumentPart {
     inlineData: {
@@ -19,17 +17,22 @@ interface TextPart {
 
 type Part = TextPart | DocumentPart;
 
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
+
 // 1. configure the API key
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+
+/*
+ *
+ * TODO - finishing this demo
+ *
+ */
 
 // 2. Generate text
 async function generateText(): Promise<void> {
     try {
-        const model: GenerativeModel = genAI.getGenerativeModel({
-            model: 'gemini-2.0-flash-001-vision',
-        });
-
-        const docPath: string = 'docs/fellyph-cv-2022.pdf';
+        const docPath: string = './public/docs/fellyph-cv-2022.pdf';
         const docData: Buffer = await fs.readFile(docPath);
         const docBase64: string = docData.toString('base64');
 
@@ -45,11 +48,11 @@ async function generateText(): Promise<void> {
             },
         ];
 
-        const result = await model.generateContent({
+        const response = await genAI.models.generateContent({
+            model: 'gemini-2.0-flash-001',
             contents: [{ role: 'user', parts }],
         });
-        const response = await result.response;
-        console.log(response.text());
+        console.log(response.text);
     } catch (error) {
         console.error('Error:', error);
     }

@@ -1,10 +1,8 @@
-import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
-import fetch from 'node-fetch';
+import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 import { promises as fs } from 'fs';
 
 dotenv.config();
-(global as any).fetch = fetch;
 
 interface ImagePart {
     inlineData: {
@@ -20,16 +18,12 @@ interface TextPart {
 type Part = TextPart | ImagePart;
 
 // 1. configure the API key
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+const genAI = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || '' });
 
 // 2. Generate text
 async function generateText(): Promise<void> {
     try {
-        const model: GenerativeModel = genAI.getGenerativeModel({
-            model: 'gemini-pro-vision',
-        });
-
-        const imagePath: string = 'img/board.webp';
+        const imagePath: string = './public/imgs/flights-board.jpg';
         const imageData: Buffer = await fs.readFile(imagePath);
         const imageBase64: string = imageData.toString('base64');
 
@@ -45,11 +39,11 @@ async function generateText(): Promise<void> {
             },
         ];
 
-        const result = await model.generateContent({
+        const response = await genAI.models.generateContent({
+            model: 'gemini-2.0-flash-001',
             contents: [{ role: 'user', parts }],
         });
-        const response = await result.response;
-        console.log(response.text());
+        console.log(response.text);
     } catch (error) {
         console.error('Error:', error);
     }
