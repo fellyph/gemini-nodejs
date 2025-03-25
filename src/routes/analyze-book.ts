@@ -1,11 +1,11 @@
 import { Router, Request, Response } from 'express';
-import { GoogleGenerativeAI, GenerativeModel, SchemaType } from '@google/generative-ai';
+import { GoogleGenAI, Type, Schema } from '@google/genai';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const router = Router();
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+const genAI = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || '' });
 
 router.post('/analyze-book', async (req: Request, res: Response) => {
     try {
@@ -19,16 +19,17 @@ router.post('/analyze-book', async (req: Request, res: Response) => {
         }
 
         // Define the schema for structured output
-        const bookSchema = {
-            type: SchemaType.OBJECT,
+        const bookSchema: Schema = {
+            description: 'Book information',
+            type: Type.OBJECT,
             properties: {
                 bookTitle: {
-                    type: SchemaType.STRING,
+                    type: Type.STRING,
                     description: 'Title of the book',
                     nullable: false,
                 },
                 bookAuthor: {
-                    type: SchemaType.STRING,
+                    type: Type.STRING,
                     description: 'Author of the book',
                     nullable: false,
                 },
@@ -36,26 +37,24 @@ router.post('/analyze-book', async (req: Request, res: Response) => {
             required: ['bookTitle', 'bookAuthor'],
         };
 
-        const model: GenerativeModel = genAI.getGenerativeModel({
+        const response = await genAI.models.generateContent({
             model: 'gemini-2.0-flash-001',
-            generationConfig: {
+            contents: [
+                {
+                    inlineData: {
+                        mimeType: mimeType,
+                        data: imageData,
+                    },
+                },
+                { text: 'Could you extract the name of the book and author' },
+            ],
+            config: {
                 responseMimeType: 'application/json',
                 responseSchema: bookSchema,
             },
         });
 
-        const result = await model.generateContent([
-            {
-                inlineData: {
-                    mimeType: mimeType,
-                    data: imageData,
-                },
-            },
-            { text: 'Could you extract the name of the book and author' },
-        ]);
-
-        const response = await result.response;
-        const text = response.text();
+        const text = response.text || '';
         const bookData = JSON.parse(text);
 
         res.json({

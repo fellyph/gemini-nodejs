@@ -1,12 +1,14 @@
+import { GoogleGenAI, Type, Schema } from '@google/genai';
 import { Router, Request, Response } from 'express';
-import { GoogleGenerativeAI, GenerativeModel, SchemaType } from '@google/generative-ai';
 import dotenv from 'dotenv';
 import { RiverResponse } from '../types/River';
 
 dotenv.config();
 
 const router = Router();
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+
+// 1. configure the API key
+const genAI = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || '' });
 
 router.post('/rivers', async (req: Request, res: Response) => {
     try {
@@ -20,22 +22,22 @@ router.post('/rivers', async (req: Request, res: Response) => {
         }
 
         // Define the schema for structured output
-        const schema = {
+        const schema: Schema = {
             description: 'List of rivers with their lengths',
-            type: SchemaType.OBJECT,
+            type: Type.OBJECT,
             properties: {
                 rivers: {
-                    type: SchemaType.ARRAY,
+                    type: Type.ARRAY,
                     items: {
-                        type: SchemaType.OBJECT,
+                        type: Type.OBJECT,
                         properties: {
                             riverName: {
-                                type: SchemaType.STRING,
+                                type: Type.STRING,
                                 description: 'Name of the river',
                                 nullable: false,
                             },
                             riverLength: {
-                                type: SchemaType.NUMBER,
+                                type: Type.NUMBER,
                                 description: 'Length of the river in kilometers',
                                 nullable: false,
                             },
@@ -47,19 +49,23 @@ router.post('/rivers', async (req: Request, res: Response) => {
             required: ['rivers'],
         };
 
-        const model: GenerativeModel = genAI.getGenerativeModel({
+        const prompt = `List 5 main rivers in ${country} with their lengths in kilometers. Include only the largest and most significant rivers.`;
+
+        const response = await genAI.models.generateContent({
             model: 'gemini-2.0-flash-001',
-            generationConfig: {
+            contents: [
+                {
+                    role: 'user',
+                    parts: [{ text: prompt }],
+                },
+            ],
+            config: {
                 responseMimeType: 'application/json',
                 responseSchema: schema,
             },
         });
 
-        const prompt = `List 5 main rivers in ${country} with their lengths in kilometers. Include only the largest and most significant rivers.`;
-
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        const text = response.text || '';
 
         // Parse the JSON response
         const riversData = JSON.parse(text);
