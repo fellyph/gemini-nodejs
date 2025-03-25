@@ -8,7 +8,7 @@ dotenv.config();
 const genAI = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || '' });
 
 // 2. Generate text
-async function generateText(): Promise<void> {
+async function generateText() {
     try {
         const response = await genAI.models.generateContent({
             model: 'gemini-2.0-flash-001',
