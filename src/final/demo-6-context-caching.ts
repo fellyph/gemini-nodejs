@@ -1,3 +1,4 @@
+/* @deprecated */
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { FileState, GoogleAICacheManager, GoogleAIFileManager } from '@google/generative-ai/server';
 import dotenv from 'dotenv';
