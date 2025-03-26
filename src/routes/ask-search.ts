@@ -55,7 +55,7 @@ router.post('/ask-search', async (req: Request, res: Response) => {
             model: 'models/gemini-2.0-flash',
             tools: [
                 {
-                    googleSearch: {},
+                    googleSearchRetrieval: {},
                 },
             ],
         },
