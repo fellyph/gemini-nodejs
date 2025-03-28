@@ -47,7 +47,11 @@
             });
 
             const data = await response.json();
-            resultDiv.innerHTML = displayData(data);
+            if (data.success) {
+                resultDiv.innerHTML = displayData(data.response);
+            } else {
+                resultDiv.innerHTML = `<div class="error">An error occurred while processing your request.</div>`;
+            }
         } catch (error) {
             resultDiv.innerHTML = `<div class="error">An error occurred while processing your request.</div>`;
         }

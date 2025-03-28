@@ -25,16 +25,25 @@ router.post('/ask-search', async (req: Request, res: Response) => {
         },
     });
 
-    console.debug(JSON.stringify(result?.candidates?.[0]?.groundingMetadata));
-
-    if (!result?.candidates?.[0]?.groundingMetadata) {
+    if (!result?.candidates?.[0]?.groundingMetadata?.groundingSupports) {
         return res.status(500).json({
             success: false,
             error: 'No response generated',
         });
     }
 
-    res.json({ metadata: result.candidates[0].groundingMetadata });
+    // Extract the text segments from groundingSupports
+    const segments = result.candidates[0].groundingMetadata.groundingSupports
+        .filter(
+            (support): support is { segment: { text: string } } =>
+                support?.segment?.text !== undefined
+        )
+        .map((support) => support.segment.text);
+
+    // Join the segments to form the complete response
+    const response = segments.join('\n');
+
+    res.json({ success: true, response });
 });
 
 export default router;
