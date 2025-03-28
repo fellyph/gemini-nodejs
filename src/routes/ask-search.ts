@@ -1,44 +1,11 @@
-/* @deprecated */
+import { GoogleGenAI } from '@google/genai';
 import { Router, Request, Response } from 'express';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const router = Router();
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-
-interface GeminiSearchResponse {
-    response: {
-        candidates: Array<{
-            content: {
-                parts: Array<unknown>; // Pode ser mais específico se souber a estrutura do Object
-                role: 'model';
-            };
-            finishReason: 'STOP';
-            groundingMetadata: {
-                searchEntryPoint: {
-                    renderedContent: string;
-                };
-                groundingChunks: Array<unknown>;
-                groundingSupports: Array<unknown>;
-                retrievalMetadata: Record<string, unknown>;
-                webSearchQueries: string[];
-            };
-        }>;
-        usageMetadata: {
-            promptTokenCount: number;
-            candidatesTokenCount: number;
-            totalTokenCount: number;
-            promptTokensDetails: Array<unknown>;
-            candidatesTokensDetails: Array<unknown>;
-        };
-        modelVersion: string;
-        text: () => unknown;
-        functionCall: () => unknown;
-        functionCalls: () => unknown;
-    };
-}
+const genAI = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || '' });
 
 router.post('/ask-search', async (req: Request, res: Response) => {
     const { question } = req.body;
@@ -50,30 +17,24 @@ router.post('/ask-search', async (req: Request, res: Response) => {
         });
     }
 
-    const model = genAI.getGenerativeModel(
-        {
-            model: 'models/gemini-2.0-flash',
-            tools: [
-                {
-                    googleSearch: {},
-                },
-            ],
+    const result = await genAI.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents: question,
+        config: {
+            tools: [{ googleSearch: {} }],
         },
-        { apiVersion: 'v1beta' }
-    );
+    });
 
-    const result = await model.generateContent(question);
-    const response = result.response.candidates?.[0]?.groundingMetadata;
-    console.log(response);
+    console.debug(JSON.stringify(result?.candidates?.[0]?.groundingMetadata));
 
-    if (!response) {
+    if (!result?.candidates?.[0]?.groundingMetadata) {
         return res.status(500).json({
             success: false,
             error: 'No response generated',
         });
     }
 
-    res.json({ response });
+    res.json({ metadata: result.candidates[0].groundingMetadata });
 });
 
 export default router;
