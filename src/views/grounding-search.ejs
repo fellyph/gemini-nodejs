@@ -11,23 +11,27 @@
     <button onclick="ask()">Ask</button>
 </div>
 
-<div id="result"></div>
+<div id="result" class="search-result"></div>
 
 <%- contentFor('scripts') %>
 
 <script>
-    function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    function displayData(data) {
+        const searchResult = escapeHtml(data);
+        return `<div>${searchResult}</div>`;
     }
 
-    function displayData(data) {
-        const rivers = data;
-        console.log(rivers);
-        return `<div>${rivers}</div>`;
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
 
     async function ask() {
-        const question = document.getElementById('question').value;
+        const question = document.getElementById('question').value.trim();
         const resultDiv = document.getElementById('result');
 
         if (!question) {
@@ -47,9 +51,14 @@
             });
 
             const data = await response.json();
-            resultDiv.innerHTML = displayData(data);
+            if (data.success) {
+                resultDiv.innerHTML = displayData(data.response);
+            } else {
+                resultDiv.innerHTML = `<div class="error">An error occurred while processing your request.</div>`;
+            }
         } catch (error) {
-            resultDiv.innerHTML = `<div class="error">An error occurred while processing your request.</div>`;
+            console.error('Search error:', error);
+            resultDiv.innerHTML = `<div class="error">Error: ${escapeHtml(error.message || 'Unknown error')}</div>`;
         }
     }
 
