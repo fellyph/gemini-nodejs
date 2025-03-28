@@ -47,6 +47,7 @@
     /* Layout */
     --max-width: 1200px;
     --max-width-subtitle: 600px;
+    --max-width-search: 800px;
     --max-width-error: 800px;
     --card-min-width: 300px;
     
@@ -272,6 +273,11 @@ button:disabled {
     background: var(--bg-card);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
+}
+
+.search-result {
+    padding: var(--space-md);
+    max-width: var(--max-width-search);
 }
 
 table {
