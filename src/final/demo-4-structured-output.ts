@@ -38,7 +38,7 @@ async function generateText(): Promise<void> {
             contents: [
                 {
                     role: 'user',
-                    parts: [{ text: 'List 6 main river in Portugal' }],
+                    parts: [{ text: 'List 5 main river in Portugal' }],
                 },
             ],
             config: {
