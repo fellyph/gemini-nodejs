@@ -25,6 +25,7 @@
         "final:demo8": "node --import ./register.js src/final/demo-8-pdf-analyzer.ts",
         "final:demo9": "node --import ./register.js src/final/demo-9-image-generation.ts",
         "final:demo10": "node --import ./register.js src/final/demo-10-video-generation.ts",
+        "final:demo11": "node --import ./register.js src/final/demo-11-prompt-thinking-configuration.ts",
         "pdf": "node --import ./register.js src/app-pdf.ts",
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
         "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
